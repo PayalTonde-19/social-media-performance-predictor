@@ -1,50 +1,73 @@
 
-from pathlib import Path
 import pandas as pd
 
-# Find the project folder
-project_folder = Path(__file__).parent
-data_folder = project_folder / "data"
+# Load the dataset
+df = pd.read_csv(
+    "data/Instagram_Analytics_200_CLEANED_2026_SYNTHETIC.csv"
+)
 
-# Find all CSV files, including nested folders
-csv_files = list(data_folder.rglob("*.csv"))
+# Display the first 5 rows
+print("\nFIRST 5 ROWS:")
+print(df.head())
 
-print("CSV files found:")
+# Display dataset information
+print("\nDATASET INFORMATION:")
+df.info()
 
-for file in csv_files:
-    print(file, "-", file.stat().st_size, "bytes")
+# Check missing values
+print("\nMISSING VALUES:")
+print(df.isnull().sum())
 
-# Load the dataset automatically
-if not csv_files:
-    print("ERROR: No CSV files found in the data folder.")
+# Check duplicate rows
+print("\nDUPLICATE ROWS:")
+print(df.duplicated().sum())
 
-else:
-    file_path = next(
-        (f for f in csv_files
-         if "Instagram_Analytics_200_CLEANED_2026_SYNTHETIC" in f.name),
-        None
-    )
+# Display column names
+print("\nCOLUMN NAMES:")
+print(df.columns.tolist())
 
-    if file_path is None:
-        print("ERROR: The expected dataset was not found.")
-    elif file_path.stat().st_size == 0:
-        print("ERROR: The dataset file is empty.")
-    else:
-        df = pd.read_csv(file_path)
+# Display number of rows and columns
+print("\nDATASET SHAPE:")
+print(df.shape)
 
-        print("\nDataset loaded successfully!")
-        print("Dataset shape:", df.shape)
 
-        print("\nColumn names:")
-        print(df.columns.tolist())
+# Check data types
+print("\nDATA TYPES:")
+print(df.dtypes)
 
-        print("\nFirst five rows:")
-        print(df.head())
+# Check missing values
+print("\nMISSING VALUES:")
+print(df.isnull().sum())
 
-        print("\nMissing values:")
-        print(df.isnull().sum())
+# Check unique values in important columns
+print("\nMEDIA TYPES:")
+print(df["media_type"].value_counts())
 
-        print("\nDuplicate rows:", df.duplicated().sum())
+print("\nACCOUNT TYPES:")
+print(df["account_type"].value_counts())
 
-        print("\nDataset information:")
-        df.info()
+print("\nCONTENT CATEGORIES:")
+print(df["content_category"].value_counts())
+
+# Summary of numerical columns
+print("\nNUMERICAL SUMMARY:")
+print(df.describe())
+
+
+# Final dataset quality report
+print("\n" + "=" * 40)
+print("DATASET QUALITY REPORT")
+print("=" * 40)
+
+print("Total rows:", df.shape[0])
+print("Total columns:", df.shape[1])
+print("Total missing values:", df.isnull().sum().sum())
+print("Total duplicate rows:", df.duplicated().sum())
+
+print("\nColumn-wise missing values:")
+print(df.isnull().sum())
+
+print("\nUnique values in each column:")
+print(df.nunique())
+
+print("\nDataset analysis completed!")
