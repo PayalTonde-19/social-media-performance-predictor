@@ -1,0 +1,201 @@
+post_id,account_id,account_type,follower_count,media_type,content_category,traffic_source,has_call_to_action,post_datetime,post_date
+IG0002309,11,brand,9044,image,Comedy,Profile,0,2026-01-01,2026-01-01
+IG0022405,17,creator,15923,carousel,Travel,Explore,0,2026-01-02,2026-01-02
+IG0023398,13,brand,5824,carousel,Fitness,Explore,0,2026-01-03,2026-01-03
+IG0025059,17,creator,15923,reel,Fashion,Explore,1,2026-01-04,2026-01-04
+IG0002665,2,creator,22291,carousel,Music,Profile,0,2026-01-05,2026-01-05
+IG0008512,16,brand,9696,reel,Travel,External,0,2026-01-06,2026-01-06
+IG0005149,19,creator,3447,carousel,Travel,Home Feed,0,2026-01-07,2026-01-07
+IG0007791,15,brand,8167,image,Beauty,Hashtags,0,2026-01-08,2026-01-08
+IG0011312,12,creator,13798,image,Beauty,Home Feed,1,2026-01-09,2026-01-09
+IG0019044,1,creator,9461,image,Fitness,Explore,0,2026-01-10,2026-01-10
+IG0010785,5,creator,10739,carousel,Lifestyle,Home Feed,1,2026-01-11,2026-01-11
+IG0022247,4,brand,4972,reel,Music,Home Feed,0,2026-01-12,2026-01-12
+IG0003269,14,creator,3083,image,Lifestyle,Explore,1,2026-01-13,2026-01-13
+IG0015948,7,creator,3551,carousel,Music,Home Feed,0,2026-01-14,2026-01-14
+IG0014978,6,creator,10034,reel,Comedy,Hashtags,0,2026-01-15,2026-01-15
+IG0014475,17,creator,15923,image,Lifestyle,Explore,0,2026-01-16,2026-01-16
+IG0028695,4,brand,4972,reel,Food,Reels Feed,0,2026-01-17,2026-01-17
+IG0014055,9,creator,6916,reel,Technology,Profile,0,2026-01-18,2026-01-18
+IG0026546,14,creator,3083,image,Beauty,Hashtags,0,2026-01-19,2026-01-19
+IG0014981,19,creator,3447,carousel,Music,Explore,1,2026-01-20,2026-01-20
+IG0017637,4,creator,4972,image,Beauty,External,1,2026-01-21,2026-01-21
+IG0003932,4,creator,4972,image,Travel,External,1,2026-01-22,2026-01-22
+IG0008388,4,creator,4972,carousel,Technology,Reels Feed,1,2026-01-23,2026-01-23
+IG0008029,12,creator,13798,carousel,Food,Profile,0,2026-01-24,2026-01-24
+IG0009483,6,creator,10034,carousel,Fitness,External,1,2026-01-25,2026-01-25
+IG0022573,8,creator,15986,carousel,Technology,External,0,2026-01-26,2026-01-26
+IG0015108,16,creator,9696,image,Lifestyle,Home Feed,1,2026-01-27,2026-01-27
+IG0003674,14,creator,3083,reel,Comedy,Home Feed,1,2026-01-28,2026-01-28
+IG0021389,15,creator,8167,reel,Beauty,Reels Feed,0,2026-01-29,2026-01-29
+IG0005938,13,creator,5824,reel,Lifestyle,Reels Feed,0,2026-01-30,2026-01-30
+IG0027034,9,creator,6916,reel,Technology,Explore,0,2026-01-31,2026-01-31
+IG0029271,4,brand,4972,image,Beauty,Explore,0,2026-02-01,2026-02-01
+IG0021881,18,brand,7486,carousel,Technology,Explore,0,2026-02-02,2026-02-02
+IG0006509,8,creator,15986,carousel,Lifestyle,Explore,0,2026-02-03,2026-02-03
+IG0021458,18,creator,7486,carousel,Comedy,External,0,2026-02-04,2026-02-04
+IG0020072,5,brand,10739,image,Music,Reels Feed,1,2026-02-05,2026-02-05
+IG0027013,7,creator,3551,image,Technology,Home Feed,0,2026-02-06,2026-02-06
+IG0010093,20,creator,31095,image,Travel,Hashtags,0,2026-02-07,2026-02-07
+IG0022568,11,brand,9044,image,Beauty,Explore,1,2026-02-08,2026-02-08
+IG0012977,8,creator,15986,image,Comedy,Profile,0,2026-02-09,2026-02-09
+IG0003814,4,brand,4972,carousel,Fashion,Hashtags,0,2026-02-10,2026-02-10
+IG0007338,19,creator,3447,reel,Photography,Explore,0,2026-02-11,2026-02-11
+IG0024484,4,creator,4972,reel,Lifestyle,Reels Feed,0,2026-02-12,2026-02-12
+IG0019593,3,creator,10018,carousel,Food,Home Feed,0,2026-02-13,2026-02-13
+IG0005122,3,creator,10018,carousel,Beauty,Hashtags,1,2026-02-14,2026-02-14
+IG0014906,11,creator,9044,image,Photography,Explore,0,2026-02-15,2026-02-15
+IG0008224,8,brand,15986,carousel,Technology,Reels Feed,0,2026-02-16,2026-02-16
+IG0002869,15,brand,8167,carousel,Fitness,Hashtags,0,2026-02-17,2026-02-17
+IG0002343,4,brand,4972,carousel,Photography,Reels Feed,1,2026-02-18,2026-02-18
+IG0008833,18,brand,7486,reel,Fitness,Reels Feed,1,2026-02-19,2026-02-19
+IG0007933,18,creator,7486,carousel,Music,Home Feed,1,2026-02-20,2026-02-20
+IG0016558,6,creator,10034,carousel,Lifestyle,Profile,0,2026-02-21,2026-02-21
+IG0020605,6,creator,10034,carousel,Photography,Hashtags,0,2026-02-22,2026-02-22
+IG0012984,2,brand,22291,reel,Food,Reels Feed,0,2026-02-23,2026-02-23
+IG0003015,13,brand,5824,carousel,Food,Profile,0,2026-02-24,2026-02-24
+IG0027332,13,brand,5824,reel,Fitness,Hashtags,0,2026-02-25,2026-02-25
+IG0012125,4,creator,4972,image,Food,Explore,1,2026-02-26,2026-02-26
+IG0003753,6,creator,10034,carousel,Music,Reels Feed,1,2026-02-27,2026-02-27
+IG0027388,5,brand,10739,reel,Technology,Home Feed,0,2026-02-28,2026-02-28
+IG0012336,13,brand,5824,image,Music,Profile,1,2026-03-01,2026-03-01
+IG0011545,6,brand,10034,image,Lifestyle,Home Feed,0,2026-03-02,2026-03-02
+IG0011357,9,creator,6916,carousel,Fashion,External,0,2026-03-03,2026-03-03
+IG0002677,4,creator,4972,image,Food,Explore,0,2026-03-04,2026-03-04
+IG0028739,13,creator,5824,carousel,Music,Home Feed,1,2026-03-05,2026-03-05
+IG0029802,11,creator,9044,image,Food,Explore,0,2026-03-06,2026-03-06
+IG0020748,15,creator,8167,carousel,Food,External,0,2026-03-07,2026-03-07
+IG0013376,9,creator,6916,image,Lifestyle,Profile,0,2026-03-08,2026-03-08
+IG0017987,7,brand,3551,image,Beauty,External,1,2026-03-09,2026-03-09
+IG0007886,5,creator,10739,image,Travel,Profile,1,2026-03-10,2026-03-10
+IG0013333,10,creator,4542,reel,Technology,Explore,1,2026-03-11,2026-03-11
+IG0009586,14,brand,3083,reel,Fashion,Home Feed,0,2026-03-12,2026-03-12
+IG0006333,4,brand,4972,carousel,Beauty,Home Feed,1,2026-03-13,2026-03-13
+IG0024430,4,creator,4972,image,Lifestyle,Hashtags,0,2026-03-14,2026-03-14
+IG0018080,8,creator,15986,image,Lifestyle,Home Feed,1,2026-03-15,2026-03-15
+IG0005202,14,creator,3083,reel,Comedy,Explore,0,2026-03-16,2026-03-16
+IG0000748,18,brand,7486,image,Food,Hashtags,1,2026-03-17,2026-03-17
+IG0009761,18,creator,7486,carousel,Fashion,Profile,0,2026-03-18,2026-03-18
+IG0029612,12,creator,13798,image,Travel,Profile,0,2026-03-19,2026-03-19
+IG0019993,6,creator,10034,image,Photography,Reels Feed,0,2026-03-20,2026-03-20
+IG0023190,1,creator,9461,image,Photography,Home Feed,0,2026-03-21,2026-03-21
+IG0025536,18,creator,7486,image,Beauty,Hashtags,0,2026-03-22,2026-03-22
+IG0017964,7,brand,3551,reel,Fashion,Explore,1,2026-03-23,2026-03-23
+IG0025247,7,brand,3551,image,Technology,Reels Feed,0,2026-03-24,2026-03-24
+IG0005082,7,brand,3551,image,Technology,External,0,2026-03-25,2026-03-25
+IG0009351,17,creator,15923,image,Photography,Reels Feed,1,2026-03-26,2026-03-26
+IG0010983,1,brand,9461,reel,Fashion,Explore,0,2026-03-27,2026-03-27
+IG0023622,9,creator,6916,image,Technology,External,0,2026-03-28,2026-03-28
+IG0013236,20,creator,31095,reel,Lifestyle,External,1,2026-03-29,2026-03-29
+IG0019368,9,brand,6916,image,Technology,Explore,1,2026-03-30,2026-03-30
+IG0001191,10,creator,4542,carousel,Lifestyle,Profile,1,2026-03-31,2026-03-31
+IG0000822,20,creator,31095,image,Comedy,Explore,1,2026-04-01,2026-04-01
+IG0015879,11,brand,9044,reel,Beauty,Reels Feed,0,2026-04-02,2026-04-02
+IG0020498,10,creator,4542,image,Fitness,Reels Feed,1,2026-04-03,2026-04-03
+IG0009420,11,brand,9044,image,Photography,Home Feed,1,2026-04-04,2026-04-04
+IG0028101,19,creator,3447,image,Music,Profile,1,2026-04-05,2026-04-05
+IG0008893,12,creator,13798,carousel,Technology,Home Feed,0,2026-04-06,2026-04-06
+IG0004462,8,brand,15986,reel,Travel,Home Feed,0,2026-04-07,2026-04-07
+IG0025230,19,creator,3447,image,Beauty,Profile,1,2026-04-08,2026-04-08
+IG0029985,1,creator,9461,carousel,Travel,Home Feed,0,2026-04-09,2026-04-09
+IG0012607,15,brand,8167,image,Photography,Hashtags,0,2026-04-10,2026-04-10
+IG0025979,7,creator,3551,carousel,Beauty,Home Feed,0,2026-04-11,2026-04-11
+IG0019133,10,brand,4542,image,Lifestyle,External,0,2026-04-12,2026-04-12
+IG0014741,12,creator,13798,carousel,Fitness,Profile,1,2026-04-13,2026-04-13
+IG0012147,4,creator,4972,image,Lifestyle,Profile,0,2026-04-14,2026-04-14
+IG0002745,9,creator,6916,reel,Food,Home Feed,1,2026-04-15,2026-04-15
+IG0010115,19,creator,3447,image,Technology,Explore,0,2026-04-16,2026-04-16
+IG0002384,19,brand,3447,carousel,Food,Explore,0,2026-04-17,2026-04-17
+IG0009154,11,brand,9044,reel,Fashion,Explore,1,2026-04-18,2026-04-18
+IG0001407,13,brand,5824,image,Fashion,Reels Feed,0,2026-04-19,2026-04-19
+IG0016561,11,brand,9044,image,Photography,Reels Feed,0,2026-04-20,2026-04-20
+IG0019362,19,creator,3447,image,Beauty,Profile,0,2026-04-21,2026-04-21
+IG0010343,6,creator,10034,image,Fashion,Reels Feed,0,2026-04-22,2026-04-22
+IG0027757,10,creator,4542,carousel,Comedy,External,0,2026-04-23,2026-04-23
+IG0017615,17,creator,15923,reel,Comedy,Hashtags,0,2026-04-24,2026-04-24
+IG0019907,12,creator,13798,carousel,Fitness,Reels Feed,1,2026-04-25,2026-04-25
+IG0024531,14,creator,3083,carousel,Music,Home Feed,0,2026-04-26,2026-04-26
+IG0027309,16,creator,9696,reel,Comedy,Hashtags,0,2026-04-27,2026-04-27
+IG0017789,5,creator,10739,carousel,Technology,Hashtags,0,2026-04-28,2026-04-28
+IG0013076,19,creator,3447,image,Beauty,Reels Feed,1,2026-04-29,2026-04-29
+IG0022090,20,creator,31095,reel,Beauty,Reels Feed,0,2026-04-30,2026-04-30
+IG0028574,1,creator,9461,image,Music,Profile,1,2026-05-01,2026-05-01
+IG0020569,20,brand,31095,carousel,Beauty,Explore,0,2026-05-02,2026-05-02
+IG0017891,9,creator,6916,image,Fashion,Reels Feed,1,2026-05-03,2026-05-03
+IG0016838,17,creator,15923,carousel,Food,Reels Feed,1,2026-05-04,2026-05-04
+IG0006553,2,brand,22291,reel,Lifestyle,Explore,0,2026-05-05,2026-05-05
+IG0019638,18,brand,7486,carousel,Beauty,External,0,2026-05-06,2026-05-06
+IG0018295,7,creator,3551,image,Fitness,External,1,2026-05-07,2026-05-07
+IG0002877,18,creator,7486,carousel,Food,Explore,0,2026-05-08,2026-05-08
+IG0002983,18,creator,7486,image,Lifestyle,Explore,0,2026-05-09,2026-05-09
+IG0017411,3,creator,10018,carousel,Comedy,Reels Feed,0,2026-05-10,2026-05-10
+IG0015163,9,brand,6916,reel,Photography,Hashtags,1,2026-05-11,2026-05-11
+IG0002154,14,creator,3083,carousel,Fitness,Home Feed,1,2026-05-12,2026-05-12
+IG0018701,11,creator,9044,carousel,Fitness,Reels Feed,1,2026-05-13,2026-05-13
+IG0007668,8,brand,15986,image,Food,Hashtags,1,2026-05-14,2026-05-14
+IG0015244,19,brand,3447,carousel,Beauty,Profile,0,2026-05-15,2026-05-15
+IG0016858,12,creator,13798,reel,Beauty,Reels Feed,0,2026-05-16,2026-05-16
+IG0013962,6,brand,10034,carousel,Comedy,Hashtags,0,2026-05-17,2026-05-17
+IG0000218,16,creator,9696,image,Technology,Hashtags,0,2026-05-18,2026-05-18
+IG0023288,15,creator,8167,carousel,Technology,External,0,2026-05-19,2026-05-19
+IG0002214,5,brand,10739,reel,Music,Explore,0,2026-05-20,2026-05-20
+IG0006581,4,creator,4972,image,Travel,Home Feed,0,2026-05-21,2026-05-21
+IG0027603,11,creator,9044,image,Fashion,Reels Feed,0,2026-05-22,2026-05-22
+IG0019377,6,creator,10034,carousel,Fashion,Profile,1,2026-05-23,2026-05-23
+IG0007540,11,brand,9044,carousel,Lifestyle,Profile,0,2026-05-24,2026-05-24
+IG0014977,1,creator,9461,reel,Lifestyle,Profile,1,2026-05-25,2026-05-25
+IG0010129,17,brand,15923,image,Technology,External,0,2026-05-26,2026-05-26
+IG0005706,3,creator,10018,carousel,Fitness,Reels Feed,0,2026-05-27,2026-05-27
+IG0005954,14,creator,3083,image,Fashion,Profile,1,2026-05-28,2026-05-28
+IG0000539,13,brand,5824,reel,Photography,Explore,0,2026-05-29,2026-05-29
+IG0021664,12,creator,13798,reel,Technology,Profile,0,2026-05-30,2026-05-30
+IG0021568,15,creator,8167,image,Fitness,Home Feed,1,2026-05-31,2026-05-31
+IG0028982,19,creator,3447,reel,Fashion,Profile,0,2026-06-01,2026-06-01
+IG0007428,15,creator,8167,reel,Music,External,1,2026-06-02,2026-06-02
+IG0020726,6,creator,10034,reel,Travel,Reels Feed,0,2026-06-03,2026-06-03
+IG0004182,8,creator,15986,reel,Lifestyle,External,1,2026-06-04,2026-06-04
+IG0018702,17,creator,15923,image,Music,Reels Feed,0,2026-06-05,2026-06-05
+IG0015415,17,creator,15923,carousel,Travel,Reels Feed,1,2026-06-06,2026-06-06
+IG0012155,11,brand,9044,image,Fitness,Profile,1,2026-06-07,2026-06-07
+IG0000580,4,creator,4972,reel,Fashion,Profile,0,2026-06-08,2026-06-08
+IG0002169,5,creator,10739,image,Comedy,Reels Feed,1,2026-06-09,2026-06-09
+IG0024420,7,creator,3551,image,Photography,Reels Feed,0,2026-06-10,2026-06-10
+IG0000251,2,creator,22291,reel,Beauty,Hashtags,1,2026-06-11,2026-06-11
+IG0015693,8,brand,15986,image,Travel,Reels Feed,0,2026-06-12,2026-06-12
+IG0009972,8,creator,15986,image,Fashion,Reels Feed,0,2026-06-13,2026-06-13
+IG0016181,20,creator,31095,image,Photography,Home Feed,1,2026-06-14,2026-06-14
+IG0011490,14,creator,3083,carousel,Photography,Reels Feed,0,2026-06-15,2026-06-15
+IG0009145,14,creator,3083,reel,Fashion,Home Feed,1,2026-06-16,2026-06-16
+IG0029432,20,creator,31095,reel,Lifestyle,External,0,2026-06-17,2026-06-17
+IG0025791,17,creator,15923,reel,Music,Profile,0,2026-06-18,2026-06-18
+IG0005772,14,creator,3083,carousel,Lifestyle,External,1,2026-06-19,2026-06-19
+IG0026747,4,brand,4972,image,Food,Explore,1,2026-06-20,2026-06-20
+IG0002326,3,creator,10018,image,Travel,External,0,2026-06-21,2026-06-21
+IG0015431,11,creator,9044,image,Photography,Hashtags,1,2026-06-22,2026-06-22
+IG0000431,14,creator,3083,image,Fitness,Hashtags,0,2026-06-23,2026-06-23
+IG0010769,13,brand,5824,image,Fitness,Hashtags,0,2026-06-24,2026-06-24
+IG0002533,12,creator,13798,carousel,Technology,Hashtags,0,2026-06-25,2026-06-25
+IG0002458,4,creator,4972,image,Beauty,Reels Feed,0,2026-06-26,2026-06-26
+IG0019187,18,creator,7486,carousel,Beauty,Home Feed,0,2026-06-27,2026-06-27
+IG0027236,1,creator,9461,carousel,Food,Explore,0,2026-06-28,2026-06-28
+IG0022292,4,brand,4972,image,Music,Reels Feed,1,2026-06-29,2026-06-29
+IG0011213,19,creator,3447,reel,Comedy,Reels Feed,1,2026-06-30,2026-06-30
+IG0000506,17,creator,15923,carousel,Lifestyle,Reels Feed,1,2026-07-01,2026-07-01
+IG0023113,18,creator,7486,image,Photography,Profile,1,2026-07-02,2026-07-02
+IG0018780,4,creator,4972,reel,Beauty,Home Feed,0,2026-07-03,2026-07-03
+IG0019083,19,brand,3447,image,Beauty,Profile,1,2026-07-04,2026-07-04
+IG0017895,8,brand,15986,reel,Technology,External,0,2026-07-05,2026-07-05
+IG0019007,15,brand,8167,image,Food,External,0,2026-07-06,2026-07-06
+IG0019691,16,brand,9696,image,Travel,Hashtags,0,2026-07-07,2026-07-07
+IG0027094,18,brand,7486,reel,Beauty,Explore,0,2026-07-08,2026-07-08
+IG0023180,6,creator,10034,image,Fitness,External,0,2026-07-09,2026-07-09
+IG0012627,3,creator,10018,reel,Fitness,Reels Feed,0,2026-07-10,2026-07-10
+IG0003835,9,creator,6916,image,Fitness,Explore,0,2026-07-11,2026-07-11
+IG0001331,5,creator,10739,image,Technology,Home Feed,0,2026-07-12,2026-07-12
+IG0021467,6,brand,10034,carousel,Lifestyle,Hashtags,0,2026-07-13,2026-07-13
+IG0023829,13,creator,5824,reel,Beauty,Reels Feed,0,2026-07-14,2026-07-14
+IG0002542,20,creator,31095,reel,Beauty,Hashtags,0,2026-07-15,2026-07-15
+IG0028613,20,brand,31095,reel,Beauty,Reels Feed,0,2026-07-16,2026-07-16
+IG0021996,1,brand,9461,carousel,Beauty,Hashtags,1,2026-07-17,2026-07-17
+IG0011900,19,creator,3447,carousel,Music,Reels Feed,1,2026-07-18,2026-07-18
+IG0025873,4,creator,4972,image,Photography,Explore,1,2026-07-19,2026-07-19
