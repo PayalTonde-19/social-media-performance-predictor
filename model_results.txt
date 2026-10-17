@@ -17,4 +17,6 @@ Model accuracy:
 - Baseline classifier: 64%
 
 Conclusion:
-The baseline classifier performed better than both trained models on the current test set. The dataset is small and synthetic, so these results should be treated as preliminary. The current target predicts CTA presence, not actual Instagram engagement or post performance.
+The baseline classifier performed better than both trained models on the current test set. 
+The dataset is small and synthetic, so these results should be treated as preliminary.
+ The current target predicts CTA presence, not actual Instagram engagement or post performance.
