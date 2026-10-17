@@ -14,7 +14,9 @@ from sklearn.dummy import DummyClassifier
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
-    confusion_matrix
+    confusion_matrix,
+    balanced_accuracy_score,
+    f1_score
 )
 
 # Step 1: Load the prepared dataset
@@ -178,3 +180,68 @@ print("\nNumber of input features:", X.shape[1])
 print("Number of training records:", len(X_train))
 print("Number of testing records:", len(X_test))
 
+
+# Step 14: Detailed model comparison
+
+models_to_compare = {
+    "Decision Tree": predictions,
+    "Logistic Regression": logistic_predictions,
+    "Baseline": baseline_predictions
+}
+
+print("\nDAY 5: DETAILED MODEL EVALUATION")
+print("=" * 45)
+
+for model_name, model_predictions in models_to_compare.items():
+    print(f"\n{model_name}")
+    print("-" * 30)
+
+    print(
+        "Accuracy:",
+        round(accuracy_score(y_test, model_predictions), 3)
+    )
+
+    print(
+        "Balanced Accuracy:",
+        round(balanced_accuracy_score(y_test, model_predictions), 3)
+    )
+
+    print(
+        "Macro F1-score:",
+        round(
+            f1_score(
+                y_test,
+                model_predictions,
+                average="macro",
+                zero_division=0
+            ),
+            3
+        )
+    )
+
+    print("\nConfusion Matrix:")
+    print(confusion_matrix(y_test, model_predictions))
+
+print("\nDay 5 evaluation completed!")
+
+
+
+# Step 15: Inspect Decision Tree feature importance
+
+print("\nDAY 5: FEATURE IMPORTANCE")
+print("=" * 40)
+
+fitted_preprocessor = model.named_steps["preprocessor"]
+decision_tree = model.named_steps["classifier"]
+
+feature_names = fitted_preprocessor.get_feature_names_out()
+importance_values = decision_tree.feature_importances_
+
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": importance_values
+}).sort_values("Importance", ascending=False)
+
+print(importance_df.head(15).to_string(index=False))
+
+print("\nFeature importance check completed!")
