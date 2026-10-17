@@ -1,0 +1,20 @@
+SOCIAL MEDIA PERFORMANCE PREDICTOR
+Model Evaluation Results — Day 4
+
+Dataset:
+- Total records: 200
+- Training records: 150
+- Testing records: 50
+- Input features: 7
+
+Target variable: has_call_to_action
+- Class 0 (No CTA): 127 records (63.5%)
+- Class 1 (CTA present): 73 records (36.5%)
+
+Model accuracy:
+- Decision Tree: 44%
+- Logistic Regression: 48%
+- Baseline classifier: 64%
+
+Conclusion:
+The baseline classifier performed better than both trained models on the current test set. The dataset is small and synthetic, so these results should be treated as preliminary. The current target predicts CTA presence, not actual Instagram engagement or post performance.
