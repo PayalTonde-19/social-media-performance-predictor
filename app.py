@@ -1,4 +1,5 @@
 
+import os
 import streamlit as st
 import pandas as pd
 import joblib
@@ -380,42 +381,54 @@ with tab2:
 # ==================================================
 # TAB 3: MODEL PERFORMANCE
 # ==================================================
+
+       
 with tab3:
     st.subheader("🧠 Model Performance")
-    st.write(
-        "Review the model comparison and the features used by the model."
+
+    st.info(
+        "This section presents model evaluation results and the "
+        "features used by the prediction model. Some team deliverables "
+        "are still pending."
     )
 
-    if COMPARISON_PATH.exists():
-        try:
-            comparison_df = pd.read_csv(COMPARISON_PATH)
-            st.markdown("### Model Comparison")
-            st.dataframe(comparison_df, use_container_width=True)
-        except Exception as e:
-            st.error(f"Could not read model_comparison.csv: {e}")
+    st.markdown("### Current prediction model")
+    st.write(
+        "The current app predicts whether an Instagram post has a "
+        "call to action (CTA). It does not directly predict likes, "
+        "comments, shares, reach, or engagement rate."
+    )
+
+    st.markdown("### Model comparison")
+    comparison_path = "model_comparison.csv"
+
+    if os.path.exists(comparison_path):
+        comparison_df = pd.read_csv(comparison_path)
+        st.dataframe(comparison_df, use_container_width=True)
     else:
-        st.info(
-            "Waiting for Person 1 to provide model_comparison.csv. "
-            "This table will appear here once the file is added."
+        st.warning(
+            "Model comparison is pending. This table will appear "
+            "when Person 1 provides the verified model_comparison.csv."
         )
 
-    st.markdown("### Feature Importance")
+    st.markdown("### Feature importance")
+    importance_path = "feature_importance.png"
 
-    if FEATURE_CHART_PATH.exists():
+    if os.path.exists(importance_path):
         st.image(
-            str(FEATURE_CHART_PATH),
-            caption="Feature-importance chart supplied by Person 1",
+            importance_path,
+            caption="Feature-importance chart supplied by the team",
             use_container_width=True
         )
     else:
-        st.info(
-            "Waiting for Person 1's feature-importance chart. "
-            "It will appear here once feature_importance.png is added."
+        st.warning(
+            "The feature-importance chart is pending. No results "
+            "have been added or estimated."
         )
 
     st.caption(
-        "Model metrics must be interpreted in the context of their "
-        "prediction targets and evaluation methods. The dataset is synthetic."
+        "Note: Model metrics must be interpreted according to their "
+        "respective prediction targets and evaluation methods."
     )
 
 
