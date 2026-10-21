@@ -50,7 +50,8 @@ else:
         df["post_date"], errors="coerce"
     )
 
-df["posting_hour"] = post_time.dt.hour
+# Extract the day of the week from the date.
+# The dataset does not contain actual posting times.
 df["posting_day"] = post_time.dt.day_name()
 
 # 6. Remove rows with missing target labels

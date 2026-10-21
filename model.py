@@ -13,59 +13,57 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import (
     accuracy_score,
-    classification_report,
-    confusion_matrix,
     balanced_accuracy_score,
-    f1_score
+    f1_score,
+    classification_report,
+    confusion_matrix
 )
 
-# Step 1: Load the prepared dataset
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "data" / "processed_instagram_data.csv"
+MODEL_PATH = BASE_DIR / "cta_model.pkl"
+COMPARISON_PATH = BASE_DIR / "model_comparison.csv"
+RESULTS_PATH = BASE_DIR / "model_results.txt"
 
+# 1. Load the processed dataset
 df = pd.read_csv(DATA_PATH)
 
-# Step 2: Separate input features and target
 target = "has_call_to_action"
-
 X = df.drop(columns=[target])
 y = df[target].astype(int)
 
-print("\nModel input columns:")
-print(X.columns.tolist())
+print("Dataset shape:", df.shape)
+print("Model input columns:", X.columns.tolist())
+print("\nCTA class counts:")
+print(y.value_counts().sort_index())
 
-# Step 3: Identify numerical and categorical columns
-numeric_cols = X.select_dtypes(
-    include="number"
-).columns.tolist()
-
+# 2. Create a fresh preprocessor for each model
+numeric_cols = X.select_dtypes(include="number").columns.tolist()
 categorical_cols = X.select_dtypes(
-    include=["object", "str", "category", "bool"]
+    include=["object", "category", "bool"]
 ).columns.tolist()
 
-# Step 4: Prepare numerical features
-numeric_pipeline = Pipeline([
-    ("imputer", SimpleImputer(strategy="median"))
-])
 
-# Step 5: Prepare categorical features
-categorical_pipeline = Pipeline([
-    ("imputer", SimpleImputer(strategy="most_frequent")),
-    ("encoder", OneHotEncoder(handle_unknown="ignore"))
-])
+def make_preprocessor():
+    numeric_pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="median"))
+    ])
 
-preprocessor = ColumnTransformer([
-    ("numeric", numeric_pipeline, numeric_cols),
-    ("categorical", categorical_pipeline, categorical_cols)
-])
+    categorical_pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("encoder", OneHotEncoder(handle_unknown="ignore"))
+    ])
 
-# Step 6: Check whether both target classes have enough rows
+    return ColumnTransformer([
+        ("numeric", numeric_pipeline, numeric_cols),
+        ("categorical", categorical_pipeline, categorical_cols)
+    ])
+
+
+# 3. Split into training and testing data
 if y.nunique() < 2 or y.value_counts().min() < 2:
-    raise ValueError(
-        "Both CTA classes need at least two rows each."
-    )
+    raise ValueError("Both CTA classes need at least two records.")
 
-# Step 7: Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -74,174 +72,147 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=y
 )
 
-print("Training rows:", len(X_train))
+print("\nTraining rows:", len(X_train))
 print("Testing rows:", len(X_test))
 
-# Step 8: Create and train the Decision Tree
-model = Pipeline([
-    ("preprocessor", preprocessor),
-    ("classifier", DecisionTreeClassifier(
-        max_depth=4,
-        class_weight="balanced",
-        random_state=42
-    ))
-])
-
-model.fit(X_train, y_train)
-# Save the trained model
-MODEL_PATH = BASE_DIR / "cta_model.pkl"
-joblib.dump(model, MODEL_PATH)
-
-print("Trained model saved to:", MODEL_PATH)
-
-# Step 9: Predict the test data
-predictions = model.predict(X_test)
-
-print("\nDecision Tree Accuracy:")
-print(round(accuracy_score(y_test, predictions), 3))
-
-print("\nClassification Report:")
-print(classification_report(
-    y_test,
-    predictions,
-    zero_division=0
-))
-
-print("\nConfusion Matrix:")
-print(confusion_matrix(y_test, predictions))
-
-# Step 10: Compare with a simple baseline
-baseline = DummyClassifier(strategy="most_frequent")
-baseline.fit(X_train, y_train)
-
-baseline_predictions = baseline.predict(X_test)
-
-print("\nBaseline Accuracy:")
-print(round(
-    accuracy_score(y_test, baseline_predictions), 3
-))
-
-print("\nDay 4 model training completed!")
-
-
-# Step 11: Train Logistic Regression
-logistic_model = Pipeline([
-    ("preprocessor", preprocessor),
-    ("classifier", LogisticRegression(
-        max_iter=1000,
-        class_weight="balanced",
-        random_state=42
-    ))
-])
-
-logistic_model.fit(X_train, y_train)
-
-logistic_predictions = logistic_model.predict(X_test)
-
-print("\nLogistic Regression Accuracy:")
-print(round(
-    accuracy_score(y_test, logistic_predictions), 3
-))
-
-print("\nLogistic Regression Report:")
-print(classification_report(
-    y_test,
-    logistic_predictions,
-    zero_division=0
-))
-
-print("\nModel Comparison")
-print("----------------")
-print("Decision Tree:", round(
-    accuracy_score(y_test, predictions), 3
-))
-print("Logistic Regression:", round(
-    accuracy_score(y_test, logistic_predictions), 3
-))
-print("Baseline:", round(
-    accuracy_score(y_test, baseline_predictions), 3
-))
-
-
-# Step 12: Check the distribution of CTA labels
-print("\nCTA Label Counts:")
-print(y.value_counts().sort_index())
-
-print("\nCTA Label Percentages:")
-print(
-    y.value_counts(normalize=True)
-    .sort_index()
-    .mul(100)
-    .round(2)
-)
-
-# Step 13: Check whether the classes are balanced
-print("\nNumber of input features:", X.shape[1])
-print("Number of training records:", len(X_train))
-print("Number of testing records:", len(X_test))
-
-
-# Step 14: Detailed model comparison
-
-models_to_compare = {
-    "Decision Tree": predictions,
-    "Logistic Regression": logistic_predictions,
-    "Baseline": baseline_predictions
+# 4. Define the candidate models
+models = {
+    "Decision Tree": Pipeline([
+        ("preprocessor", make_preprocessor()),
+        ("classifier", DecisionTreeClassifier(
+            max_depth=4,
+            class_weight="balanced",
+            random_state=42
+        ))
+    ]),
+    "Logistic Regression": Pipeline([
+        ("preprocessor", make_preprocessor()),
+        ("classifier", LogisticRegression(
+            max_iter=1000,
+            class_weight="balanced",
+            random_state=42
+        ))
+    ]),
+    "Baseline": DummyClassifier(strategy="most_frequent")
 }
 
-print("\nDAY 5: DETAILED MODEL EVALUATION")
-print("=" * 45)
+results = []
+predictions_by_model = {}
 
-for model_name, model_predictions in models_to_compare.items():
-    print(f"\n{model_name}")
-    print("-" * 30)
+# 5. Train and evaluate each model
+for name, candidate in models.items():
+    candidate.fit(X_train, y_train)
+    predictions = candidate.predict(X_test)
+    predictions_by_model[name] = predictions
 
-    print(
-        "Accuracy:",
-        round(accuracy_score(y_test, model_predictions), 3)
-    )
-
-    print(
-        "Balanced Accuracy:",
-        round(balanced_accuracy_score(y_test, model_predictions), 3)
-    )
-
-    print(
-        "Macro F1-score:",
-        round(
+    results.append({
+        "Model": name,
+        "Accuracy": round(
+            accuracy_score(y_test, predictions), 3
+        ),
+        "Balanced Accuracy": round(
+            balanced_accuracy_score(y_test, predictions), 3
+        ),
+        "Macro F1": round(
             f1_score(
-                y_test,
-                model_predictions,
-                average="macro",
-                zero_division=0
-            ),
-            3
+                y_test, predictions,
+                average="macro", zero_division=0
+            ), 3
         )
+    })
+
+comparison = pd.DataFrame(results).sort_values(
+    "Macro F1", ascending=False
+)
+
+print("\nMODEL COMPARISON")
+print(comparison.to_string(index=False))
+
+comparison.to_csv(COMPARISON_PATH, index=False)
+
+# 6. Select the best machine-learning model by Macro F1
+# Baseline remains a benchmark, not the selected ML model.
+ml_names = ["Decision Tree", "Logistic Regression"]
+
+best_name = max(
+    ml_names,
+    key=lambda name: f1_score(
+        y_test,
+        predictions_by_model[name],
+        average="macro",
+        zero_division=0
+    )
+)
+
+best_model = models[best_name]
+best_predictions = predictions_by_model[best_name]
+
+print("\nSELECTED MACHINE-LEARNING MODEL:", best_name)
+print(
+    "Accuracy:",
+    round(accuracy_score(y_test, best_predictions), 3)
+)
+print(
+    "Balanced accuracy:",
+    round(balanced_accuracy_score(y_test, best_predictions), 3)
+)
+print(
+    "Macro F1:",
+    round(f1_score(
+        y_test, best_predictions,
+        average="macro", zero_division=0
+    ), 3)
+)
+
+print("\nClassification Report")
+report = classification_report(
+    y_test, best_predictions, zero_division=0
+)
+print(report)
+
+print("Confusion Matrix")
+matrix = confusion_matrix(y_test, best_predictions)
+print(matrix)
+
+# 7. Save the selected model and evaluation report
+joblib.dump(best_model, MODEL_PATH)
+
+with open(RESULTS_PATH, "w", encoding="utf-8") as file:
+    file.write("SOCIAL MEDIA PERFORMANCE PREDICTOR\n")
+    file.write("CTA Classification Evaluation\n\n")
+    file.write("Target: has_call_to_action\n")
+    file.write(f"Training rows: {len(X_train)}\n")
+    file.write(f"Testing rows: {len(X_test)}\n")
+    file.write(f"Selected ML model: {best_name}\n\n")
+    file.write("Model comparison:\n")
+    file.write(comparison.to_string(index=False))
+    file.write("\n\nClassification report:\n")
+    file.write(report)
+    file.write("\nConfusion matrix:\n")
+    file.write(str(matrix))
+    file.write("\n\nImportant limitation:\n")
+    file.write(
+        "The dataset is synthetic and contains only 200 records. "
+        "The results do not establish real-world predictive reliability.\n"
     )
 
-    print("\nConfusion Matrix:")
-    print(confusion_matrix(y_test, model_predictions))
+# 8. Show Decision Tree feature importance
+tree_model = models["Decision Tree"]
+tree_preprocessor = tree_model.named_steps["preprocessor"]
+tree_classifier = tree_model.named_steps["classifier"]
 
-print("\nDay 5 evaluation completed!")
-
-
-
-# Step 15: Inspect Decision Tree feature importance
-
-print("\nDAY 5: FEATURE IMPORTANCE")
-print("=" * 40)
-
-fitted_preprocessor = model.named_steps["preprocessor"]
-decision_tree = model.named_steps["classifier"]
-
-feature_names = fitted_preprocessor.get_feature_names_out()
-importance_values = decision_tree.feature_importances_
+feature_names = tree_preprocessor.get_feature_names_out()
+importance_values = tree_classifier.feature_importances_
 
 importance_df = pd.DataFrame({
     "Feature": feature_names,
     "Importance": importance_values
 }).sort_values("Importance", ascending=False)
 
-print(importance_df.head(15).to_string(index=False))
+print("\nTOP 10 DECISION TREE FEATURES")
+print(importance_df.head(10).to_string(index=False))
 
-print("\nFeature importance check completed!")
+print("\nSaved model:", MODEL_PATH)
+print("Saved comparison:", COMPARISON_PATH)
+print("Saved report:", RESULTS_PATH)
+print("\nModel evaluation completed!")
