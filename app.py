@@ -1,564 +1,469 @@
 
-from pathlib import Path
-
+import os
 import joblib
 import pandas as pd
 import streamlit as st
-
+import matplotlib.pyplot as plt
 
 # --------------------------------------------------
-# 1. PAGE CONFIGURATION
+# PAGE CONFIGURATION
 # --------------------------------------------------
-
 st.set_page_config(
     page_title="Social Media Performance Predictor",
-    page_icon="📱",
+    page_icon="📊",
     layout="wide"
 )
 
-BASE_DIR = Path(__file__).resolve().parent
-DATA_PATH = BASE_DIR / "data" / "processed_instagram_data.csv"
-MODEL_PATH = BASE_DIR / "cta_model.pkl"
-COMPARISON_PATH = BASE_DIR / "model_comparison.csv"
-
+# --------------------------------------------------
+# CUSTOM STYLING
+# --------------------------------------------------
+st.markdown("""
+<style>
+.stApp {
+    background-color: #EAF5FF;
+}
+h1, h2, h3 {
+    color: #24445E;
+}
+div[data-testid="stMetric"] {
+    background-color: #FDF0F7;
+    border: 1px solid #E99AC5;
+    padding: 14px;
+    border-radius: 12px;
+}
+div.stButton > button,
+div[data-testid="stFormSubmitButton"] > button {
+    background-color: #E99AC5;
+    color: #24445E;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 2. CUSTOM DESIGN
+# LOAD MODEL AND DATA
 # --------------------------------------------------
-
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background-color: #F2F8FF;
-    }
-
-    h1, h2, h3 {
-        color: #344C70;
-    }
-
-    [data-testid="stSidebar"] {
-        background-color: #FCE8F1;
-    }
-
-    div[data-testid="stMetric"] {
-        background-color: #FFFFFF;
-        border: 1px solid #E7D9EA;
-        padding: 16px;
-        border-radius: 12px;
-    }
-
-    div.stButton > button,
-    div.stFormSubmitButton > button {
-        background-color: #E9A9CA;
-        color: #352B43;
-        border: none;
-        border-radius: 10px;
-        font-weight: bold;
-    }
-
-    div.stButton > button:hover,
-    div.stFormSubmitButton > button:hover {
-        background-color: #D991B9;
-        color: white;
-        border: none;
-    }
-
-    .subtitle {
-        color: #65758B;
-        font-size: 16px;
-    }
-
-    .welcome-card {
-        background-color: #FFFFFF;
-        padding: 20px;
-        border-radius: 14px;
-        border-left: 5px solid #E9A9CA;
-        margin-bottom: 20px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# --------------------------------------------------
-# 3. LOAD DATA AND MODEL
-# --------------------------------------------------
-
-@st.cache_data
-def load_data():
-    return pd.read_csv(DATA_PATH)
-
-
 @st.cache_resource
 def load_model():
-    return joblib.load(MODEL_PATH)
+    return joblib.load("cta_model.pkl")
 
 
-if not DATA_PATH.exists():
-    st.error(
-        "Processed dataset not found. "
-        "Please run: python data_prep.py"
-    )
-    st.stop()
+@st.cache_data
+def load_processed_data():
+    return pd.read_csv("data/processed_instagram_data.csv")
 
-if not MODEL_PATH.exists():
-    st.error(
-        "Trained model not found. "
-        "Please run: python model.py"
-    )
-    st.stop()
+
+@st.cache_data
+def load_trend_data():
+    paths = [
+        "data/Instagram_Analytics_200_CLEANED_2026_SYNTHETIC.csv",
+        "Instagram_Analytics_200_CLEANED_2026_SYNTHETIC.csv",
+        "data/processed_instagram_data.csv",
+    ]
+
+    for path in paths:
+        if os.path.exists(path):
+            return pd.read_csv(path)
+
+    raise FileNotFoundError("Instagram dataset was not found.")
+
 
 try:
-    df = load_data()
     model = load_model()
-except Exception as error:
-    st.error(f"Could not load the data or model: {error}")
+    processed_df = load_processed_data()
+    df = load_trend_data()
+except Exception as e:
+    st.error(f"Could not load project files: {e}")
     st.stop()
 
+# --------------------------------------------------
+# VALID MODEL INPUT OPTIONS
+# These must match the values used to train the model.
+# --------------------------------------------------
 
-required_columns = [
+# --------------------------------------------------
+# DROPDOWN OPTIONS — RESTORED
+# --------------------------------------------------
+account_options = [
+    "Creator", "Business", "Personal", "Influencer", "Brand"
+]
+
+media_options = [
+    "Image", "Video", "Carousel", "Reel", "Story"
+]
+
+category_options = [
+    "Beauty", "Fashion", "Lifestyle", "Food",
+    "Travel", "Fitness", "Music", "Education",
+    "Technology", "Entertainment", "Health",
+    "Photography", "Business", "Art", "Gaming",
+    "Sports", "Other"
+]
+
+traffic_options = [
+    "Feed","Hashtags", "Explore", "Home",
+    "Profile", "Search", "Other"
+]
+
+day_options = [
+    "Monday", "Tuesday", "Wednesday", "Thursday",
+    "Friday", "Saturday", "Sunday"
+]
+
+# Verify that the expected model input columns exist.
+MODEL_COLUMNS = [
     "account_type",
     "follower_count",
     "media_type",
     "content_category",
     "traffic_source",
     "posting_day",
-    "has_call_to_action"
 ]
 
-missing_columns = [
-    column for column in required_columns
-    if column not in df.columns
-]
-
-if missing_columns:
-    st.error(f"Required columns are missing: {missing_columns}")
+if not all(col in processed_df.columns for col in MODEL_COLUMNS):
+    st.error(
+        "The processed dataset is missing one or more model input columns. "
+        "Please check data/processed_instagram_data.csv."
+    )
     st.stop()
 
-
 # --------------------------------------------------
-# 4. HEADER
+# HEADER
 # --------------------------------------------------
+st.title("📊 Social Media Performance Predictor")
 
-st.title("📱 Social Media Performance Predictor")
-
-st.markdown(
-    '<p class="subtitle">'
-    'An interactive dashboard to explore Instagram post data '
-    'and predict whether a post includes a call to action.'
-    '</p>',
-    unsafe_allow_html=True
+st.caption(
+    "An interactive dashboard for Instagram data, "
+    "CTA predictions, trends, and model evaluation."
 )
 
-st.markdown(
-    """
-    <div class="welcome-card">
-        <strong>Welcome to your dashboard! 💗</strong><br>
-        Explore the dataset, compare models, and test a post
-        using the CTA prediction model.
-    </div>
-    """,
-    unsafe_allow_html=True
+st.write(
+    "Explore the dataset and test how different post "
+    "characteristics are handled by the trained model."
 )
 
+st.divider()
 
 # --------------------------------------------------
-# 5. SIDEBAR NAVIGATION
+# TABS
 # --------------------------------------------------
-
-page = st.sidebar.radio(
-    "Navigation",
-    [
-        "Dashboard Overview",
-        "Predict CTA",
-        "Model Comparison",
-        "About the Project"
-    ]
+tab1, tab2, tab3 = st.tabs(
+    ["✨ Predict", "📊 Trends", "🧠 Model Performance"]
 )
 
-st.sidebar.markdown("---")
-st.sidebar.caption("Social Media Performance Predictor")
-st.sidebar.caption("Machine Learning Project")
-
-
-# --------------------------------------------------
-# 6. DASHBOARD OVERVIEW
-# --------------------------------------------------
-
-if page == "Dashboard Overview":
-
-    st.header("📊 Dashboard Overview")
-
-    total_posts = len(df)
-    unique_accounts = (
-        df["account_type"].nunique()
-    )
-
-    cta_values = pd.to_numeric(
-        df["has_call_to_action"],
-        errors="coerce"
-    )
-
-    cta_count = int((cta_values == 1).sum())
-    no_cta_count = int((cta_values == 0).sum())
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    c1.metric("Total Posts", f"{total_posts:,}")
-    c2.metric("Account Types", unique_accounts)
-    c3.metric("Posts With CTA", f"{cta_count:,}")
-    c4.metric("Posts Without CTA", f"{no_cta_count:,}")
-
-    st.markdown("---")
-
-    left, right = st.columns(2)
-
-    with left:
-        st.subheader("CTA Distribution")
-
-        cta_chart = pd.DataFrame({
-            "CTA Status": [
-                "CTA Present",
-                "CTA Absent"
-            ],
-            "Number of Posts": [
-                cta_count,
-                no_cta_count
-            ]
-        })
-
-        st.bar_chart(
-            cta_chart.set_index("CTA Status")
-        )
-
-    with right:
-        st.subheader("Posts by Media Type")
-
-        media_counts = (
-            df["media_type"]
-            .value_counts()
-            .rename_axis("Media Type")
-            .to_frame("Number of Posts")
-        )
-
-        st.bar_chart(media_counts)
-
-    st.markdown("---")
-
-    left2, right2 = st.columns(2)
-
-    with left2:
-        st.subheader("Average Followers by Account Type")
-
-        followers_by_account = (
-            df.groupby("account_type")["follower_count"]
-            .mean()
-            .sort_values(ascending=False)
-        )
-
-        st.bar_chart(followers_by_account)
-
-    with right2:
-        st.subheader("Posts by Day of the Week")
-
-        day_order = [
-            "Monday", "Tuesday", "Wednesday",
-            "Thursday", "Friday", "Saturday", "Sunday"
-        ]
-
-        day_counts = (
-            df["posting_day"]
-            .value_counts()
-            .reindex(day_order, fill_value=0)
-        )
-
-        st.bar_chart(day_counts)
-
-    st.markdown("---")
-
-    st.subheader("Dataset Preview")
-    st.dataframe(df.head(10), use_container_width=True)
-
-    st.caption(
-        "The dataset contains synthetic sample data. "
-        "These charts describe the supplied dataset, not all Instagram posts."
-    )
-
-
-# --------------------------------------------------
-# 7. CTA PREDICTION
-# --------------------------------------------------
-
-elif page == "Predict CTA":
-
-    st.header("💗 Predict CTA Presence")
+# ==================================================
+# TAB 1: PREDICTION
+# ==================================================
+with tab1:
+    st.subheader("✨ Predict Call-to-Action Presence")
 
     st.write(
-        "Enter the post details below. The trained model will "
-        "predict whether the post includes a call to action."
+        "Enter the details below and click Predict to generate "
+        "a new prediction."
     )
-
-    # Use categories actually present in the training dataset.
-    account_options = sorted(
-        df["account_type"].dropna().astype(str).unique().tolist()
-    )
-
-    media_options = sorted(
-        df["media_type"].dropna().astype(str).unique().tolist()
-    )
-
-    category_options = sorted(
-        df["content_category"].dropna().astype(str).unique().tolist()
-    )
-
-    traffic_options = sorted(
-        df["traffic_source"].dropna().astype(str).unique().tolist()
-    )
-
-    day_order = [
-        "Monday", "Tuesday", "Wednesday",
-        "Thursday", "Friday", "Saturday", "Sunday"
-    ]
-
-    available_days = (
-        df["posting_day"].dropna().astype(str).unique().tolist()
-    )
-
-    day_options = [
-        day for day in day_order if day in available_days
-    ]
 
     with st.form("prediction_form"):
-
-        st.subheader("Account and Audience")
-
         col1, col2 = st.columns(2)
 
         with col1:
             account_type = st.selectbox(
-                "Account type",
-                account_options
+                "Account Type",
+                account_options,
+                format_func=lambda x: x.title()
             )
 
             follower_count = st.number_input(
-                "Follower count",
+                "Follower Count",
                 min_value=0,
-                max_value=100000000,
-                value=5000,
+                max_value=10000000,
+                value=8000,
                 step=100
+            )
+
+            media_type = st.selectbox(
+                "Media Type",
+                media_options,
+                format_func=lambda x: x.title()
+            )
+
+            content_category = st.selectbox(
+                "Content Category",
+                category_options
             )
 
         with col2:
             traffic_source = st.selectbox(
-                "Traffic source",
+                "Traffic Source",
                 traffic_options
             )
 
-            media_type = st.selectbox(
-                "Media type",
-                media_options
+            posting_hour = st.slider(
+                "Posting Hour (reference only)",
+                min_value=0,
+                max_value=23,
+                value=18
             )
 
-        st.subheader("Post Details")
-
-        col3, col4 = st.columns(2)
-
-        with col3:
-            content_category = st.selectbox(
-                "Content category",
-                category_options
-            )
-
-        with col4:
             posting_day = st.selectbox(
-                "Day of the week",
+                "Posting Day",
                 day_options
             )
 
         submitted = st.form_submit_button(
-            "💗 Predict CTA Presence",
+            "🔮 Predict CTA",
             use_container_width=True
         )
 
+    # A new submission always replaces the previous saved result.
     if submitted:
-
-        # These columns must match the model's training inputs.
         input_data = pd.DataFrame([{
             "account_type": account_type,
-            "follower_count": follower_count,
+            "follower_count": int(follower_count),
             "media_type": media_type,
             "content_category": content_category,
             "traffic_source": traffic_source,
-            "posting_day": posting_day
-        }])
+            "posting_day": posting_day,
+        }], columns=MODEL_COLUMNS)
 
         try:
-            with st.spinner("Generating your prediction..."):
-                prediction = int(model.predict(input_data)[0])
+            prediction = model.predict(input_data)[0]
 
-            st.markdown("---")
-            st.subheader("💗 Prediction Result")
-
-            if prediction == 1:
-                st.success(
-                    "The model predicts that this post "
-                    "will have a call to action (CTA)."
-                )
-            else:
-                st.info(
-                    "The model predicts that this post "
-                    "will not have a call to action (CTA)."
-                )
-
-            # Show model probability when available.
+            probabilities = None
             if hasattr(model, "predict_proba"):
-                probabilities = model.predict_proba(input_data)[0]
-                classes = list(model.classes_)
+                probabilities = model.predict_proba(input_data)[0].tolist()
 
-                if prediction in classes:
-                    probability = float(
-                        probabilities[classes.index(prediction)]
-                    )
+            st.session_state["latest_prediction"] = {
+                "inputs": input_data.to_dict(orient="records")[0],
+                "prediction": int(prediction),
+                "probabilities": probabilities,
+                "posting_hour": int(posting_hour),
+            }
+            st.session_state["prediction_error"] = None
 
-                    st.metric(
-                        "Model confidence for this prediction",
-                        f"{probability:.1%}"
-                    )
+        except Exception as e:
+            st.session_state["prediction_error"] = str(e)
+            st.session_state.pop("latest_prediction", None)
 
-            with st.expander("View the input provided to the model"):
-                st.dataframe(input_data, use_container_width=True)
+    # Display any current prediction, including after Streamlit reruns.
+    if st.session_state.get("prediction_error"):
+        st.error("Prediction failed.")
+        st.code(st.session_state["prediction_error"])
 
-            st.caption(
-                "This is a model prediction, not a guarantee "
-                "of actual Instagram post performance."
+    result = st.session_state.get("latest_prediction")
+
+    if result is not None:
+        st.markdown("---")
+        st.markdown("### Prediction Result")
+
+        if result["prediction"] == 1:
+            st.success(
+                "The model predicts that this post includes a "
+                "Call to Action (CTA)."
             )
-
-        except Exception as error:
-            st.error(f"Prediction failed: {error}")
+        else:
             st.info(
-                "Check that model.py was run successfully and "
-                "that the model uses the same input columns."
+                "The model predicts that this post does not include "
+                "a Call to Action (CTA)."
             )
 
+        st.caption(
+            "This is a machine learning prediction, not a guarantee "
+            "of actual post performance."
+        )
 
-# --------------------------------------------------
-# 8. MODEL COMPARISON
-# --------------------------------------------------
+        st.markdown("#### Latest submitted inputs")
+        st.dataframe(
+            pd.DataFrame([result["inputs"]]),
+            hide_index=True,
+            use_container_width=True
+        )
 
-elif page == "Model Comparison":
+        if result["probabilities"] is not None:
+            classes = list(model.classes_)
+            probability_data = pd.DataFrame({
+                "Predicted class": classes,
+                "Probability": result["probabilities"],
+            })
+            probability_data["Probability"] = (
+                probability_data["Probability"].map(
+                    lambda p: f"{p:.1%}"
+                )
+            )
 
-    st.header("📈 Model Comparison")
+            st.markdown("#### Model class probabilities")
+            st.dataframe(
+                probability_data,
+                hide_index=True,
+                use_container_width=True
+            )
+
+        st.caption(
+            "Posting hour is displayed for reference only; "
+            "it is not used by the current trained model."
+        )
+
+    else:
+        st.info("Enter your choices and click Predict CTA to begin.")
+
+# ==================================================
+# TAB 2: TRENDS
+# ==================================================
+with tab2:
+    st.subheader("📊 Instagram Trends")
+    st.write("Explore the available dataset.")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Records", len(df))
+    col2.metric("Total Columns", len(df.columns))
+
+    if "follower_count" in df.columns:
+        col3.metric(
+            "Average Followers",
+            f"{df['follower_count'].mean():,.0f}"
+        )
+
+    with st.expander("View Dataset"):
+        st.dataframe(df, use_container_width=True)
+
+    if "has_call_to_action" in df.columns:
+        st.markdown("### CTA Distribution")
+
+        cta_counts = (
+            df["has_call_to_action"]
+            .value_counts()
+            .reindex([0, 1], fill_value=0)
+        )
+
+        fig, ax = plt.subplots()
+        cta_counts.plot(kind="bar", ax=ax)
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(["No CTA", "CTA Present"], rotation=0)
+        ax.set_title("Posts With and Without CTA")
+        ax.set_xlabel("CTA Status")
+        ax.set_ylabel("Number of Posts")
+        fig.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+
+    if "follower_count" in df.columns:
+        st.markdown("### Follower Count Distribution")
+
+        fig, ax = plt.subplots()
+        df["follower_count"].dropna().plot(
+            kind="hist", bins=15, ax=ax
+        )
+        ax.set_title("Distribution of Follower Counts")
+        ax.set_xlabel("Follower Count")
+        ax.set_ylabel("Number of Posts")
+        fig.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+
+    if "content_category" in df.columns:
+        st.markdown("### Content Categories")
+
+        fig, ax = plt.subplots()
+        df["content_category"].value_counts().plot(
+            kind="bar", ax=ax
+        )
+        ax.set_title("Posts by Content Category")
+        ax.set_xlabel("Category")
+        ax.set_ylabel("Number of Posts")
+        ax.tick_params(axis="x", rotation=35)
+        fig.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+
+    if "media_type" in df.columns:
+        st.markdown("### Media Type Distribution")
+
+        fig, ax = plt.subplots()
+        df["media_type"].value_counts().plot(
+            kind="bar", ax=ax
+        )
+        ax.set_title("Media Type Distribution")
+        ax.set_xlabel("Media Type")
+        ax.set_ylabel("Number of Posts")
+        ax.tick_params(axis="x", rotation=25)
+        fig.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+
+# ==================================================
+# TAB 3: MODEL PERFORMANCE
+# ==================================================
+with tab3:
+    st.subheader("🧠 Model Performance")
 
     st.write(
-        "Compare the evaluated models using the results "
-        "generated by model.py."
+        "Review the evaluation results supplied by the team."
     )
 
-    if COMPARISON_PATH.exists():
+    comparison_path = "model_comparison.csv"
 
+    if os.path.exists(comparison_path):
         try:
-            comparison_df = pd.read_csv(COMPARISON_PATH)
-
+            comparison_df = pd.read_csv(comparison_path)
             st.dataframe(
                 comparison_df,
                 use_container_width=True,
                 hide_index=True
             )
-
-            if (
-                "Model" in comparison_df.columns
-                and "Macro F1" in comparison_df.columns
-            ):
-                chart_data = comparison_df.set_index("Model")[
-                    ["Macro F1"]
-                ]
-
-                st.subheader("Macro F1-score Comparison")
-                st.bar_chart(chart_data)
-
-            if (
-                "Model" in comparison_df.columns
-                and "Accuracy" in comparison_df.columns
-            ):
-                accuracy_data = comparison_df.set_index("Model")[
-                    ["Accuracy"]
-                ]
-
-                st.subheader("Accuracy Comparison")
-                st.bar_chart(accuracy_data)
-
-        except Exception as error:
-            st.error(f"Could not read the model comparison: {error}")
-
+        except Exception as e:
+            st.error(f"Could not read comparison file: {e}")
     else:
-        st.warning(
-            "Model comparison results are not available yet. "
-            "Run `python model.py` in your project terminal first."
-        )
+        st.warning("model_comparison.csv is not available yet.")
 
-    results_path = BASE_DIR / "model_results.txt"
+    st.markdown("### Current Prediction Task")
 
-    if results_path.exists():
-        with st.expander("View detailed evaluation report"):
-            st.text(results_path.read_text(encoding="utf-8"))
-
-
-# --------------------------------------------------
-# 9. ABOUT THE PROJECT
-# --------------------------------------------------
-
-elif page == "About the Project":
-
-    st.header("ℹ️ About the Project")
-
-    st.markdown(
-        """
-        ### Project Objective
-
-        The Social Media Performance Predictor demonstrates how
-        machine learning can analyse Instagram post characteristics
-        and predict whether a post contains a call to action.
-
-        ### Dataset
-
-        - **Records:** 200 synthetic Instagram posts
-        - **Target variable:** `has_call_to_action`
-        - **Target value 1:** CTA present
-        - **Target value 0:** CTA absent
-
-        ### Input Features
-
-        - Account type
-        - Follower count
-        - Media type
-        - Content category
-        - Traffic source
-        - Day of the week
-
-        ### Machine Learning Models
-
-        - Decision Tree Classifier
-        - Logistic Regression
-        - Majority-class baseline for comparison
-
-        ### Tools and Technologies
-
-        - Python
-        - Pandas
-        - Scikit-learn
-        - Joblib
-        - Streamlit
-
-        ### Important Limitation
-
-        The dataset is synthetic and contains only 200 records.
-        The model demonstrates a machine learning workflow but
-        has not been established as a reliable predictor of
-        real-world Instagram engagement or success.
-        """
+    st.write(
+        "The current saved model predicts CTA presence. "
+        "It does not directly predict likes, comments, reach, "
+        "or engagement rate."
     )
 
-st.markdown("---")
-st.caption("Social Media Performance Predictor | Academic Project")
+    st.markdown("### Input Features")
+
+    st.write(
+        "Account type, follower count, media type, "
+        "content category, traffic source, and posting day."
+    )
+
+    st.caption(
+        "The posting-hour slider is for reference only because "
+        "posting hour is not an input to the current model."
+    )
+
+    importance_path = "feature_importance.png"
+
+    if os.path.exists(importance_path):
+        st.markdown("### Feature Importance")
+
+        st.image(
+            importance_path,
+            caption=(
+                "Feature importance from a separate Decision Tree model; "
+                "not the Logistic Regression model's coefficients."
+            ),
+            use_container_width=True
+        )
+    else:
+        st.info("feature_importance.png is not available yet.")
+
+    st.warning(
+        "The dataset is small and synthetic. Results may not "
+        "generalise to real Instagram posts. The baseline model "
+        "also achieved higher raw accuracy in the current evaluation."
+    )
+
+# --------------------------------------------------
+# FOOTER
+# --------------------------------------------------
+st.divider()
+
+st.caption(
+    "Social Media Performance Predictor | Machine Learning Project"
+)
