@@ -153,160 +153,154 @@ tab1, tab2, tab3 = st.tabs(
     ["✨ Predict", "📊 Trends", "🧠 Model Performance"]
 )
 
+
 # ==================================================
 # TAB 1: PREDICTION
 # ==================================================
+
+def clear_prediction_inputs():
+    st.session_state["account_type"] = account_options[0]
+    st.session_state["follower_count"] = 5000
+    st.session_state["media_type"] = media_options[0]
+    st.session_state["content_category"] = category_options[0]
+    st.session_state["traffic_source"] = traffic_options[0]
+    st.session_state["posting_day"] = "Monday"
+    st.session_state["posting_hour"] = 18
+
+
 with tab1:
-    st.subheader("✨ Predict Call-to-Action Presence")
+    st.subheader("✨ Predict CTA Presence")
+    st.write("Enter your post details and click Predict CTA.")
 
-    st.write(
-        "Enter the details below and click Predict to generate "
-        "a new prediction."
+    account_options = sorted(
+        df["account_type"].dropna().astype(str).unique().tolist()
     )
+    media_options = sorted(
+        df["media_type"].dropna().astype(str).unique().tolist()
+    )
+    category_options = sorted(
+        df["content_category"].dropna().astype(str).unique().tolist()
+    )
+    traffic_options = sorted(
+        df["traffic_source"].dropna().astype(str).unique().tolist()
+    )
+    day_options = [
+        "Monday", "Tuesday", "Wednesday", "Thursday",
+        "Friday", "Saturday", "Sunday"
+    ]
 
-    with st.form("prediction_form"):
-        col1, col2 = st.columns(2)
+    defaults = {
+        "account_type": account_options[0],
+        "follower_count": 5000,
+        "media_type": media_options[0],
+        "content_category": category_options[0],
+        "traffic_source": traffic_options[0],
+        "posting_day": "Monday",
+        "posting_hour": 18,
+    }
 
-        with col1:
-            account_type = st.selectbox(
-                "Account Type",
-                account_options,
-                format_func=lambda x: x.title()
-            )
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
 
-            follower_count = st.number_input(
-                "Follower Count",
-                min_value=0,
-                max_value=10000000,
-                value=8000,
-                step=100
-            )
+    col1, col2 = st.columns(2)
 
-            media_type = st.selectbox(
-                "Media Type",
-                media_options,
-                format_func=lambda x: x.title()
-            )
+    with col1:
+        st.selectbox(
+            "Account Type",
+            account_options,
+            key="account_type"
+        )
 
-            content_category = st.selectbox(
-                "Content Category",
-                category_options
-            )
+        st.number_input(
+            "Follower Count",
+            min_value=0,
+            max_value=10000000,
+            step=100,
+            key="follower_count"
+        )
 
-        with col2:
-            traffic_source = st.selectbox(
-                "Traffic Source",
-                traffic_options
-            )
+        st.selectbox(
+            "Media Type",
+            media_options,
+            key="media_type"
+        )
 
-            posting_hour = st.slider(
-                "Posting Hour (reference only)",
-                min_value=0,
-                max_value=23,
-                value=18
-            )
+        st.slider(
+            "⏰ Posting Time",
+            min_value=0,
+            max_value=23,
+            key="posting_hour",
+            format="%d:00"
+        )
 
-            posting_day = st.selectbox(
-                "Posting Day",
-                day_options
-            )
+    with col2:
+        st.selectbox(
+            "Content Category",
+            category_options,
+            key="content_category"
+        )
 
-        submitted = st.form_submit_button(
+        st.selectbox(
+            "Traffic Source",
+            traffic_options,
+            key="traffic_source"
+        )
+
+        st.selectbox(
+            "Posting Day",
+            day_options,
+            key="posting_day"
+        )
+
+    predict_col, clear_col = st.columns(2)
+
+    with predict_col:
+        predict_clicked = st.button(
             "🔮 Predict CTA",
             use_container_width=True
         )
 
-    # A new submission always replaces the previous saved result.
-    if submitted:
+    with clear_col:
+        st.button(
+            "🧹 Clear All",
+            on_click=clear_prediction_inputs,
+            use_container_width=True
+        )
+
+    if predict_clicked:
         input_data = pd.DataFrame([{
-            "account_type": account_type,
-            "follower_count": int(follower_count),
-            "media_type": media_type,
-            "content_category": content_category,
-            "traffic_source": traffic_source,
-            "posting_day": posting_day,
-        }], columns=MODEL_COLUMNS)
+            "account_type": st.session_state["account_type"],
+            "follower_count": st.session_state["follower_count"],
+            "media_type": st.session_state["media_type"],
+            "content_category": st.session_state["content_category"],
+            "traffic_source": st.session_state["traffic_source"],
+            "posting_day": st.session_state["posting_day"],
+        }])
+
+        st.markdown("### 🔮 Prediction Result")
 
         try:
             prediction = model.predict(input_data)[0]
 
-            probabilities = None
-            if hasattr(model, "predict_proba"):
-                probabilities = model.predict_proba(input_data)[0].tolist()
+            if prediction == 1:
+                st.success(
+                    "✅ The model predicts that this post includes a CTA."
+                )
+            else:
+                st.info(
+                    "ℹ️ The model predicts that this post does not include a CTA."
+                )
 
-            st.session_state["latest_prediction"] = {
-                "inputs": input_data.to_dict(orient="records")[0],
-                "prediction": int(prediction),
-                "probabilities": probabilities,
-                "posting_hour": int(posting_hour),
-            }
-            st.session_state["prediction_error"] = None
+            st.caption(
+                "This is a model estimate, not a guarantee of real-world performance. "
+                "Posting time is displayed as an input but is not used by the "
+                "current model."
+            )
 
         except Exception as e:
-            st.session_state["prediction_error"] = str(e)
-            st.session_state.pop("latest_prediction", None)
-
-    # Display any current prediction, including after Streamlit reruns.
-    if st.session_state.get("prediction_error"):
-        st.error("Prediction failed.")
-        st.code(st.session_state["prediction_error"])
-
-    result = st.session_state.get("latest_prediction")
-
-    if result is not None:
-        st.markdown("---")
-        st.markdown("### Prediction Result")
-
-        if result["prediction"] == 1:
-            st.success(
-                "The model predicts that this post includes a "
-                "Call to Action (CTA)."
-            )
-        else:
-            st.info(
-                "The model predicts that this post does not include "
-                "a Call to Action (CTA)."
-            )
-
-        st.caption(
-            "This is a machine learning prediction, not a guarantee "
-            "of actual post performance."
-        )
-
-        st.markdown("#### Latest submitted inputs")
-        st.dataframe(
-            pd.DataFrame([result["inputs"]]),
-            hide_index=True,
-            use_container_width=True
-        )
-
-        if result["probabilities"] is not None:
-            classes = list(model.classes_)
-            probability_data = pd.DataFrame({
-                "Predicted class": classes,
-                "Probability": result["probabilities"],
-            })
-            probability_data["Probability"] = (
-                probability_data["Probability"].map(
-                    lambda p: f"{p:.1%}"
-                )
-            )
-
-            st.markdown("#### Model class probabilities")
-            st.dataframe(
-                probability_data,
-                hide_index=True,
-                use_container_width=True
-            )
-
-        st.caption(
-            "Posting hour is displayed for reference only; "
-            "it is not used by the current trained model."
-        )
-
-    else:
-        st.info("Enter your choices and click Predict CTA to begin.")
-
+            st.error("Prediction failed. Please check the model inputs.")
+            st.caption(f"Technical details: {e}")
 # ==================================================
 # TAB 2: TRENDS
 # ==================================================
