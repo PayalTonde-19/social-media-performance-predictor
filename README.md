@@ -100,11 +100,37 @@ The model input features are:
 
 Posting hour is displayed as a reference input in the interface but is not used by the current model.
 
-## 📈 Evaluation
+## Model Evaluation
 
-The project compares Logistic Regression and Decision Tree classifiers with a baseline classifier using accuracy, balanced accuracy, and Macro F1.
+We evaluated multiple machine learning models to predict
+Instagram social media performance.
 
-In the current evaluation, Logistic Regression achieved 48% accuracy, while the baseline achieved 64% accuracy. These results indicate that the model requires further improvement.
+### Model Comparison
+
+| Model | Accuracy | Balanced Accuracy | Macro F1 |
+|---|---:|---:|---:|
+| Random Forest | 54.5% | 53.4% | 52.8% |
+| Logistic Regression | 48.5% | 48.5% | 47.3% |
+| Decision Tree | 44.5% | 44.6% | 41.5% |
+| Baseline | 63.5% | 50.0% | 38.8% |
+
+### Best Model
+
+Random Forest achieved the highest Macro F1 score of 52.8%
+among the evaluated machine learning models.
+
+Although the baseline achieved higher accuracy (63.5%),
+Random Forest provided a better balance across classes,
+with a balanced accuracy of 53.4%.
+
+Therefore, Random Forest performed better than the other
+trained models in terms of Macro F1 score.
+
+### Conclusion
+
+The model comparison highlights the importance of
+evaluating classification models using multiple metrics
+rather than accuracy alone.
 
 ## ⚠️ Limitations
 

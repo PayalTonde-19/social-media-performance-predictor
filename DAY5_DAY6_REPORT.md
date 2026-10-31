@@ -1,4 +1,10 @@
-
+> **Note:** This report documents an earlier experimental
+> run using a 150/50 train-test split. Random Forest was
+> not included in this experiment. The results presented
+> here belong to the earlier experiment and should not be
+> considered the final model comparison. Refer to the
+> README.md and model_comparison.csv for the updated
+> evaluation results.
 # Social Media Performance Predictor
 ## Day 5 and Day 6 — Model Evaluation Report
 
